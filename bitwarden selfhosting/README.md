@@ -1,6 +1,6 @@
 
 
-# all-in-one docker template for hosting vaultwarden on docker
+# all-in-one docker template for running vaultwarden in docker
 
 template contains:
 - nginx proxymanager with letsencrypt plugin 
