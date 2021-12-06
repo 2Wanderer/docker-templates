@@ -37,4 +37,4 @@ this setup will use the docker network as much as possible, adding an extra netw
 Note: the vaultwarden public domain needs to be on ssl/tls (https) inorder to initialize the webvault 
 for futher setup see [Vaultwarden wiki](https://github.com/dani-garcia/vaultwarden/wiki)
 
-For security purposes you can add the [SELKS](https://www.stamus-networks.com/blog/selks-on-docker) stack to monitor the traffic that is traveling throug the host and docker network. this will require some additional resources. Use the provided easy-install script configure the host and docker-interface from the vaultwarden container to monitor the whole route from host interface to container.
+For security purposes you can add the [SELKS](https://www.stamus-networks.com/blog/selks-on-docker) stack to monitor the traffic that is traveling throug the host and docker network(s). This will require some additional resources. Clone the repo and use the provided easy-install script, configure the host and container networkinterface to monitor the whole route from host to container.
