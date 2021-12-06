@@ -4,8 +4,8 @@
 
 template contains:
 - nginx proxymanager with letsencrypt plugin 
-- vaultwarden server
-- portainer a web-based docker interface
-- watchtower for automated updates
+- vaultwarden server, a hosted password vault
+- portainer, a web-based docker interface. do not expose the portainer gui, because we're using the CE whitch not supports MFA
+- watchtower, automated pull image and recreate container
 
-in this case used for Vaultwarden but can be used as a base template for any production docker app
+The Vaultwarden container can be replace for whatever application you want to run inside this environment. 
