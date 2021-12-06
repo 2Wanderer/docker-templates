@@ -1,6 +1,6 @@
 
 
-# all-in-one docker template for running vaultwarden in docker
+# All-in-one docker template for running Vaultwarden in Docker
 
 This template contains:
 - Nginx proxymanager with letsencrypt plugin.
@@ -10,7 +10,7 @@ This template contains:
 
 The Vaultwarden container can be replaced for whatever application you want to run inside this environment. 
 
-# prerequisits
+# Prerequisits
 installed and running:
 
 - Docker
@@ -18,15 +18,15 @@ installed and running:
 
 # Install Guide:
 
-clone the repo and run `docker-compose up -d`
+Clone the repo and run `docker-compose up -d`
 
-visit http://your-server-ip:81
+Visit http://your-server-ip:81
 
-login on the ProxyManager gui with the default credentials
+Login on the ProxyManager gui with the default credentials
 User: admin@example.com 
 Passwd: changeme
 
-add the proxyhosts:
+Add the proxyhosts:
 - http://vaultwarden:80  
 - http://portainer:9000
 - http://vaultwarden_proxymanager_1:81*
