@@ -1,0 +1,93 @@
+version: '3'
+
+services:
+  proxymanager:
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    ports:
+      - '80:80' # Public HTTP Port
+      - '443:443' # Public HTTPS Port
+      - '81:81' # Admin Web Port
+    environment:
+      DB_MYSQL_HOST: "database"
+      DB_MYSQL_PORT: 3306
+      DB_MYSQL_USER: "npm"
+      DB_MYSQL_PASSWORD: "npm"
+      DB_MYSQL_NAME: "npm"
+      # Uncomment this if IPv6 is not enabled on your host
+      # DISABLE_IPV6: 'true'
+      com.centurylinklabs.watchtower.enable: "true"
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+    depends_on:
+      - database
+    networks:
+      - nginx-proxy-net
+      - db-net
+  database:
+    image: 'jc21/mariadb-aria:latest'
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: 'npm'
+      MYSQL_DATABASE: 'npm'
+      MYSQL_USER: 'npm'
+      MYSQL_PASSWORD: 'npm'
+      com.centurylinklabs.watchtower.enable: "true"
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    networks:
+      - db-net
+
+  bitwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: always
+    environment:
+      - WEBSOCKET_ENABLED=true
+      - SIGNUPS_ALLOWED=false
+      - DOMAIN=
+      - SMTP_HOST=
+      - SMTP_FROM=
+      - SMTP_PORT=587
+      - SMTP_SSL=true
+      - SMTP_USERNAME=
+      - SMTP_PASSWORD=
+      - ADMIN_TOKEN=
+      - com.centurylinklabs.watchtower.enable=true
+    volumes:
+  networks:
+      - nginx-proxy-net
+
+  portainer:
+    image: cr.portainer.io/portainer/portainer-ce:latest
+    command: -H unix:///var/run/docker.sock
+    restart: always
+    environment:
+      - com.centurylinklabs.watchtower.enable=true
+      - VIRTUAL_PORT=9000
+    ports:
+      - 8000:8000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    networks:
+      - nginx-proxy-net
+
+  watchtower:
+    image: containrrr/watchtower
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/timezone:/etc/timezone:ro
+    environment:
+      - WATCHTOWER_CLEANUP=true
+     volumes:
+  portainer_data:
+
+networks:
+    nginx-proxy-net: null
+    db-net: null
+
+
+ 
