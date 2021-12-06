@@ -32,7 +32,7 @@ add the proxyhosts:
 - http://vaultwarden_proxymanager_1:81 (optional)
 
 NB: you can point the proxymanager gui to itself and commenting out the port forward in the docker-compose.yml
-this setup will as much as possible over the docker network. adding an extra network security layer to the host. 
+this setup will use the docker network as much as possible, adding an extra network security layer to the host. 
 
 Note: the vaultwarden public domain needs to be on ssl/tls (https) inorder to initialize the webvault 
 for futher setup see [Vaultwarden wiki](https://github.com/dani-garcia/vaultwarden/wiki)
