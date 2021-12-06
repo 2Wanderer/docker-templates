@@ -56,7 +56,8 @@ services:
       - ADMIN_TOKEN=
       - com.centurylinklabs.watchtower.enable=true
     volumes:
-  networks:
+      - ./bw-data:/data
+    networks:
       - nginx-proxy-net
 
   portainer:
