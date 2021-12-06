@@ -83,7 +83,8 @@ services:
       - /etc/timezone:/etc/timezone:ro
     environment:
       - WATCHTOWER_CLEANUP=true
-     volumes:
+
+volumes:
   portainer_data:
 
 networks:
