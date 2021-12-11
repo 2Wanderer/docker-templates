@@ -1,6 +1,6 @@
 # Prometheus / Grafana Dashboard
 
-build as (dockerized addition) to monitor resource consumption of (distributed) [CAPEv2 sandbox ](https://github.com/kevoreilly/CAPEv2) 
+build as dockerized addition to monitor resource consumption of (distributed) [CAPEv2 sandbox ](https://github.com/kevoreilly/CAPEv2) 
 
 
 After you've created the prometheus.yml file and have deployed the docker-compose, the rest of the steps are as follows:
