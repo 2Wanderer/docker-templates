@@ -3,20 +3,27 @@ services:
     node-exporter:
         network_mode: host
         pid: host
+        restart: unless-stopped
         volumes:
             - '/:/host:ro,rslave'
         image: 'quay.io/prometheus/node-exporter:latest'
 
     prometheus:
         container_name: prometheus
-        ports:
-            - '9091:9090' #modify 9091 to your setup needs
+        #ports:
+        #    - '9091:9090' #modify 9091 to your setup needs
         volumes:
             - './prometheus.yml:/etc/prometheus/prometheus.yml' #modify the path for your install location
         image: prom/prometheus
+        restart: unless-stopped
 
     grafana:
         container_name: grafana
         ports:
-            - '3457:3000' #modify 3457 to your setup needs
+            - '3000:3000'
         image: grafana/grafana
+        restart: unless-stopped
+        volumes:
+            - grafana-data:/var/lib/grafana #Explicitly define the persistent volume for your data storage
+volumes:
+  grafana-data:
