@@ -12,7 +12,7 @@ services:
         ports:
             - '9091:9090' #modify 9091 to your setup needs
         volumes:
-            - '/volume1/Configs/Prometheus/prometheus.yml:/etc/prometheus/prometheus.yml' #modify the path for your install location
+            - './prometheus.yml:/etc/prometheus/prometheus.yml' #modify the path for your install location
         image: prom/prometheus
 
     grafana:
