@@ -6,7 +6,7 @@ services:
         volumes:
             - '/:/host:ro,rslave'
         image: 'quay.io/prometheus/node-exporter:latest'
-		
+
     prometheus:
         container_name: prometheus
         ports:
