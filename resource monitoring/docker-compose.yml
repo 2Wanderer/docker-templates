@@ -10,8 +10,8 @@ services:
 
     prometheus:
         container_name: prometheus
-        #ports:
-        #    - '9091:9090' #modify 9091 to your setup needs
+        ports:
+            - '9091:9090' #modify 9091 to your setup needs
         volumes:
             - './prometheus.yml:/etc/prometheus/prometheus.yml' #modify the path for your install location
         image: prom/prometheus
