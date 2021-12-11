@@ -1,4 +1,8 @@
 # Prometheus / Grafana Dashboard
+
+build as (dockerized addition) to monitor distributed instances of [CAPEv2 sandbox ](https://github.com/kevoreilly/CAPEv2) 
+
+
 After you've created the prometheus.yml file and have deployed the docker-compose, the rest of the steps are as follows:
 
 - Select DataSource on home page. Select Prometheus.
