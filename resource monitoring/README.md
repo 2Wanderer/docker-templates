@@ -12,5 +12,5 @@ After you've created the prometheus.yml file and have deployed the docker-compos
 (This is the dashboard I like: https://grafana.com/grafana/dashboards/11074)
 - Import ID in Grafana
 
-
+![example](example.png)
 
