@@ -12,6 +12,7 @@ services:
         container_name: prometheus
         ports:
             - '9091:9090' #modify 9091 to your setup needs
+        # when monitoring a single node it is not neccessary to expose this port, you can use the docker network by using prometheus:9090 as hostname in grafana
         volumes:
             - './prometheus.yml:/etc/prometheus/prometheus.yml' #modify the path for your install location
         image: prom/prometheus
