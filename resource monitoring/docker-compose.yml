@@ -28,8 +28,8 @@ services:
         volumes:
             - grafana-data:/var/lib/grafana
         #Optional environmental settings for access by subpath
-        environment:
-            GF_SERVER_ROOT_URL: "/monitoring"
-            GF_SERVER_SERVE_FROM_SUB_PATH: "true"
+        #environment:
+        #    GF_SERVER_ROOT_URL: "/monitoring"
+        #    GF_SERVER_SERVE_FROM_SUB_PATH: "true"
 volumes:
   grafana-data:
