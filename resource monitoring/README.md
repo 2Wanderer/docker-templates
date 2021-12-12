@@ -5,7 +5,7 @@
 After you've created the prometheus.yml file and have deployed the docker-compose, the rest of the steps are as follows:
 
 - Select DataSource on home page. Select Prometheus.
-- add in http://prometheus:9090 for single host, or https://externalip:9091 for distributed
+- add in http://prometheus:9090 for single host, or https://hostip:9091 for distributed
 - Search for: "node exporter grafana dashboards" on Google
 - Look for results on grafana.com
 - Find ID of the dashboard you like
