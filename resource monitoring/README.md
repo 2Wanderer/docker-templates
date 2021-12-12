@@ -12,7 +12,7 @@ After you've created the prometheus.yml file and have deployed the docker-compos
 (This is the dashboard I like: https://grafana.com/grafana/dashboards/11074)
 - Import ID in Grafana
 
-If Grafana is used as a subpath of CAPEv2 e.g. https://mycapesandbox.com/monitoring
+If Grafana is used as a subpath of CAPEv2 e.g. https://mysandbox.com/monitoring
 you should add an extra locations block in nginx like so:
 ``` 
 location /monitoring {
