@@ -22,4 +22,4 @@ location /monitoring {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     }
 ```
-note: also dont forget to uncomment the needed environmment variables for Grafana in the docker-compose file
+note: also dont forget to uncomment the needed environment variables for Grafana in the docker-compose file
