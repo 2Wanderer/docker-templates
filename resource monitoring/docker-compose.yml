@@ -10,11 +10,11 @@ services:
 
     prometheus:
         container_name: prometheus
-        ports:
-            - '9091:9090' #modify 9091 to your setup needs
-        # when monitoring a single node it is not neccessary to expose this port, you can use the docker network by using prometheus:9090 as hostname in grafana
+        #uncomment next 2 lines for multinode cluster use
+        #ports:
+        #    - '9091:9090'
         volumes:
-            - './prometheus.yml:/etc/prometheus/prometheus.yml' #modify the path for your install location
+            - './prometheus.yml:/etc/prometheus/prometheus.yml'
         image: prom/prometheus
         restart: unless-stopped
 
@@ -24,7 +24,12 @@ services:
             - '3000:3000'
         image: grafana/grafana
         restart: unless-stopped
+        #Explicitly define the persistent volume for your data storage
         volumes:
-            - grafana-data:/var/lib/grafana #Explicitly define the persistent volume for your data storage
+            - grafana-data:/var/lib/grafana
+        #Optional environmenatal settings for access by subpath
+        environment:
+            GF_SERVER_ROOT_URL: "/monitoring"
+            GF_SERVER_SERVE_FROM_SUB_PATH: "true"
 volumes:
   grafana-data:
