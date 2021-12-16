@@ -1,0 +1,209 @@
+version: '3.3'
+
+services:
+
+ postgres:
+    image: postgres
+    container_name: PostgresDB
+    restart: unless-stopped
+    environment:
+      - 'POSTGRES_USER=n8nuser'
+      - 'POSTGRES_PASSWORD=n8npass'
+      - 'POSTGRES_DB=n8n'
+    volumes:
+      - 'postgres:/var/lib/postgresql/data'
+    networks:
+      - n8n-net
+
+ n8n:
+    image: n8nio/n8n
+    container_name: n8n
+    hostname: n8n
+    restart: unless-stopped
+    environment:
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=n8n
+      - DB_POSTGRESDB_USER=n8nuser
+      - DB_POSTGRESDB_PASSWORD=n8npass
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=thehive
+      - export EXECUTIONS_DATA_PRUNE=true
+      - export EXECUTIONS_DATA_MAX_AGE=336
+      - N8N_BASIC_AUTH_PASSWORD=thehive
+
+    ports:
+      - '0.0.0.0:5678:5678'
+    links:
+      - postgres
+    volumes:
+      - 'n8n:/root/.n8n'
+      - 'n8n:/opt/workflows'
+    networks:
+      - n8n-net
+      - default
+
+ cassandra:
+    image: 'cassandra:3.11'
+    container_name: cassandra
+    restart: unless-stopped
+    hostname: cassandra
+    environment:
+      - MAX_HEAP_SIZE=1G
+      - HEAP_NEWSIZE=1G
+      - CASSANDRA_CLUSTER_NAME=thp
+    volumes:
+      - cassandra:/var/lib/cassandra/data'
+    networks:
+      - cassandra-net
+
+ thehive:
+    image: 'thehiveproject/thehive4:latest'
+    container_name: 'thehive4'
+    restart: unless-stopped
+    depends_on:
+      - cassandra
+    ports:
+      - '0.0.0.0:9000:9000'
+    volumes:
+      - /vol/thehive/application.conf:/etc/thehive/application.conf
+      - cassandra:/opt/data
+    networks:
+      - default
+      - cassandra-net
+      - n8n-net
+    command: '--no-config --no-config-secret'
+ elasticsearch:
+    image: 'elasticsearch:7.10.1'
+    container_name: elasticsearch
+    restart: unless-stopped
+    ports:
+      - '0.0.0.0:9200:9200'
+    environment:
+      - http.host=0.0.0.0
+      - discovery.type=single-node
+      - cluster.name=hive
+      - script.allowed_types= inline
+      - thread_pool.search.queue_size=100000
+      - thread_pool.write.queue_size=10000
+      - gateway.recover_after_nodes=1
+      - xpack.security.enabled=false
+      - bootstrap.memory_lock=true
+      - 'ES_JAVA_OPTS=-Xms256m -Xmx256m'
+    volumes:
+      - elasticsearch:/usr/share/elasticsearch/data
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    networks:
+      - es-net
+
+ cortex:
+    image: 'thehiveproject/cortex:latest'
+    container_name: cortex
+    restart: unless-stopped
+    command:
+      --job-directory /opt/cortex/jobs
+    environment:
+      - JOB_DIRECTORY=/opt/cortex/jobs
+    volumes:
+      - /vol/cortex/application.conf:/etc/cortex/application.conf
+      - /opt/cortex/jobs:/opt/cortex/jobs
+      - '/var/run/docker.sock:/var/run/docker.sock'
+    depends_on:
+      - elasticsearch
+    ports:
+      - '0.0.0.0:9001:9001'
+    networks:
+      - default
+      - es-net
+
+
+ redis:
+    image: redis:latest
+    container_name: redis
+    restart: unless-stopped
+    networks:
+    - misp-net
+
+ db:
+    image: mysql:latest
+    container_name: mysql
+    restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      - "MYSQL_USER=misp"
+      - "MYSQL_PASSWORD=example"
+      - "MYSQL_ROOT_PASSWORD=password"
+      - "MYSQL_DATABASE=misp"
+    volumes:
+      - /vol/mysql:/var/lib/mysql
+    networks:
+    - misp-net
+# for testing purposes, deploy on dedicated workload for production
+ misp:
+    image: coolacid/misp-docker:core-latest
+    container_name: misp
+    restart: unless-stopped
+    depends_on:
+    - redis
+    - db
+    ports:
+    - "80:80"
+    - "443:443"
+    environment:
+    - "HOSTNAME=https://yourdomain.com"
+    - "REDIS_FQDN=redis"
+    - "INIT=true"             # Initialze MISP, things includes, attempting to import SQL and the Files DIR
+    - "CRON_USER_ID=1"        # The MISP user ID to run cron jobs as
+    - "DISIPV6=true" # Disable IPV6 in nginx
+    networks:
+    - misp-net
+    - default
+
+ misp-modules:
+    image: coolacid/misp-docker:modules-latest
+    container_name: misp-modules
+    restart: unless-stopped
+    environment:
+    - "REDIS_BACKEND=redis"
+    depends_on:
+    - redis
+    - db
+
+    networks:
+    - misp-net
+    
+    
+ # depreciated imap is considerd unsafe.
+
+ #imap2thehive:
+ #   restart: unless-stopped
+ #   image: marvy19/imap2thehive:imap2thehive
+ #   container_name: imap2thehive
+ #   volumes:
+ #    - type: bind
+ #      source: "/vol/imap2thehive.conf"
+ #      target: /etc/imap2thehive.conf
+ #      read_only: true
+ #   networks:
+ #    - default
+
+volumes:
+  cassandra:
+    driver: local
+  elasticsearch:
+    driver: local
+  postgres:
+    driver: local
+  n8n:
+    driver: local
+networks:
+  default: null
+  n8n-net: null
+  cassandra-net: null
+  misp-net: null
+  es-net: null
