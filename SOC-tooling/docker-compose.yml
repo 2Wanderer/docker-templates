@@ -67,7 +67,7 @@ services:
     ports:
       - '0.0.0.0:9000:9000'
     volumes:
-      - /vol/thehive/application.conf:/etc/thehive/application.conf
+      - ./vol/thehive/application.conf:/etc/thehive/application.conf
       - cassandra:/opt/data
     networks:
       - default
@@ -109,8 +109,8 @@ services:
     environment:
       - JOB_DIRECTORY=/opt/cortex/jobs
     volumes:
-      - /vol/cortex/application.conf:/etc/cortex/application.conf
-      - /opt/cortex/jobs:/opt/cortex/jobs
+      - ./vol/cortex/application.conf:/etc/cortex/application.conf
+      - ./vol/cortex/jobs:/opt/cortex/jobs
       - '/var/run/docker.sock:/var/run/docker.sock'
     depends_on:
       - elasticsearch
@@ -140,7 +140,7 @@ services:
       - "MYSQL_ROOT_PASSWORD=password"
       - "MYSQL_DATABASE=misp"
     volumes:
-      - /vol/mysql:/var/lib/mysql
+      - ./vol/mysql:/var/lib/mysql
     networks:
     - misp-net
 # for testing purposes, deploy on dedicated workload for production
@@ -186,7 +186,7 @@ services:
  #   container_name: imap2thehive
  #   volumes:
  #    - type: bind
- #      source: "/vol/imap2thehive.conf"
+ #      source: "./vol/imap2thehive/imap2thehive.conf"
  #      target: /etc/imap2thehive.conf
  #      read_only: true
  #   networks:
